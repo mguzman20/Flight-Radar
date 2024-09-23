@@ -53,38 +53,38 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         websocket.onmessage = (event) => {
             const data = JSON.parse(event.data);
             switch (data.type) {
-                case 'flight':
-                    // Update flights state
-                    setFlights((prevFlights) => [...prevFlights, data]);
-                    break;
+            case 'flight':
+                // Update flights state
+                setFlights((prevFlights) => [...prevFlights, data]);
+                break;
 
-                case 'plane':
-                    // Update planes state
-                    setPlanes((prevPlanes) => [...prevPlanes, data]);
-                    break;
+            case 'plane':
+                // Update planes state
+                setPlanes((prevPlanes) => [...prevPlanes, data]);
+                break;
 
-                case 'takeoff':
-                    // Update takeoffs state
-                    setTakeoffs((prevTakeoffs) => [...prevTakeoffs, data]);
-                    break;
+            case 'takeoff':
+                // Update takeoffs state
+                setTakeoffs((prevTakeoffs) => [...prevTakeoffs, data]);
+                break;
 
-                case 'landing':
-                    // Handle landing events if needed
-                    setLandings((prevLandings) => [...prevLandings, data]);
-                    break;
+            case 'landing':
+                // Handle landing events if needed
+                setLandings((prevLandings) => [...prevLandings, data]);
+                break;
 
-                case 'crash':
-                    // Handle crash events if needed
-                    setCrashes((prevCrashes) => [...prevCrashes, data]);
-                    break;
+            case 'crash':
+                // Handle crash events if needed
+                setCrashes((prevCrashes) => [...prevCrashes, data]);
+                break;
 
-                case 'message':
-                    // Update messages state
-                    setMessages((prevMessages) => [...prevMessages, data]);
-                    break;
+            case 'message':
+                // Update messages state
+                setMessages((prevMessages) => [...prevMessages, data]);
+                break;
 
-                default:
-                    console.warn(`Unknown event type: ${data.type}`);
+            default:
+                console.warn(`Unknown event type: ${data.type}`);
             }
         };
 
