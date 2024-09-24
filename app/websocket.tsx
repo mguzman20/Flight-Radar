@@ -2,17 +2,17 @@
 
 import { Flight } from '@/types/Flight';
 import { Plane, TakeoffEvent, LandingEvent, CrashedEvent } from '@/types/Plane';
-import { MessageEvent } from '@/types/Message';
+import { Message } from '@/types/Message';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ReactNode } from 'react';
 
 interface WebSocketContextType {
     flights: Flight[];
     planes: Plane[];
-    landings: LandingEvent[];
-    takeoffs: TakeoffEvent[];
-    crashes: CrashedEvent[];
-    messages: MessageEvent[];
+    landings: string[];
+    takeoffs: string[];
+    crashes: string[];
+    messages: Message[];
 }
 
 const defaultContextValue: WebSocketContextType = {
@@ -27,12 +27,12 @@ const defaultContextValue: WebSocketContextType = {
 const WebSocketContext = createContext<WebSocketContextType>(defaultContextValue);
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
-    const [messages, setMessages] = useState<MessageEvent[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [flights, setFlights] = useState<Flight[]>([]);
     const [planes, setPlanes] = useState<Plane[]>([]);
-    const [takeoffs, setTakeoffs] = useState<TakeoffEvent[]>([]);
-    const [landings, setLandings] = useState<LandingEvent[]>([]);
-    const [crashes, setCrashes] = useState<CrashedEvent[]>([]);
+    const [takeoffs, setTakeoffs] = useState<string[]>([]);
+    const [landings, setLandings] = useState<string[]>([]);
+    const [crashes, setCrashes] = useState<string[]>([]);
     
     const studentId = '20642431'; // Replace with your student ID
     const username = 'm.gguzman'; // Optional
@@ -95,22 +95,22 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
 
             case 'takeoff':
                 // Update takeoffs state
-                setTakeoffs((prevTakeoffs) => [...prevTakeoffs, data]);
+                setTakeoffs((prevTakeoffs) => [...prevTakeoffs, data.flight_id]);
                 break;
 
             case 'landing':
                 // Handle landing events if needed
-                setLandings((prevLandings) => [...prevLandings, data]);
+                setLandings((prevLandings) => [...prevLandings, data.flight_id]);
                 break;
 
             case 'crash':
                 // Handle crash events if needed
-                setCrashes((prevCrashes) => [...prevCrashes, data]);
+                setCrashes((prevCrashes) => [...prevCrashes, data.flight_id]);
                 break;
 
             case 'message':
                 // Update messages state
-                setMessages((prevMessages) => [...prevMessages, data]);
+                setMessages((prevMessages) => [...prevMessages, data.message]);
                 break;
 
             default:

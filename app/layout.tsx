@@ -11,11 +11,13 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body>
+            <body >
                 <NextUIProvider>
                     <WebSocketProvider>
-                        <Navbar />
-                        {children}
+                        <div style={{ height: '100svh' }} className="flex flex-col items-stretch min-h-screen">
+                            <Navbar />
+                            {children}
+                        </div>
                     </WebSocketProvider>
                 </NextUIProvider>
             </body>
