@@ -8,7 +8,6 @@ export default function Planes() {
     const { flights } = useWebSocket();
     return (
         <div>
-            <h1>Flights</h1>
             <Table aria-label="planes">
                 <TableHeader>
                     <TableColumn>flight_id</TableColumn>
