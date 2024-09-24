@@ -1,7 +1,7 @@
-
+'use client'
 import { WebSocketProvider } from "./websocket";
 import "./globals.css";
-
+import { NextUIProvider } from "@nextui-org/react";
 
 export default function RootLayout({
     children,
@@ -11,9 +11,11 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body>
-                <WebSocketProvider>
-                    {children}
-                </WebSocketProvider>
+                <NextUIProvider>
+                    <WebSocketProvider>
+                        {children}
+                    </WebSocketProvider>
+                </NextUIProvider>
             </body>
         </html>
     );

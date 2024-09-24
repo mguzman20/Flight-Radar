@@ -1,14 +1,14 @@
 "use client"; // Ensure this context is a Client Component
 
-import { FlightsEvents } from '@/types/Flight';
-import { PlaneEvent, TakeoffEvent, LandingEvent, CrashedEvent } from '@/types/Plane';
+import { Flight } from '@/types/Flight';
+import { Plane, TakeoffEvent, LandingEvent, CrashedEvent } from '@/types/Plane';
 import { MessageEvent } from '@/types/Message';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ReactNode } from 'react';
 
 interface WebSocketContextType {
-    flights: FlightsEvents[];
-    planes: PlaneEvent[];
+    flights: Flight[];
+    planes: Plane[];
     landings: LandingEvent[];
     takeoffs: TakeoffEvent[];
     crashes: CrashedEvent[];
@@ -28,17 +28,17 @@ const WebSocketContext = createContext<WebSocketContextType>(defaultContextValue
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const [messages, setMessages] = useState<MessageEvent[]>([]);
-    const [flights, setFlights] = useState<FlightsEvents[]>([]);
-    const [planes, setPlanes] = useState<PlaneEvent[]>([]);
+    const [flights, setFlights] = useState<Flight[]>([]);
+    const [planes, setPlanes] = useState<Plane[]>([]);
     const [takeoffs, setTakeoffs] = useState<TakeoffEvent[]>([]);
     const [landings, setLandings] = useState<LandingEvent[]>([]);
     const [crashes, setCrashes] = useState<CrashedEvent[]>([]);
     
-    const studentId = '123456'; // Replace with your student ID
-    const username = 'YourUsername'; // Optional
+    const studentId = '20642431'; // Replace with your student ID
+    const username = 'm.gguzman'; // Optional
 
     useEffect(() => {
-        const websocket = new WebSocket('wss://tarea-2.2024-2.tallerdeintegracion.cl1/connect');
+        const websocket = new WebSocket('wss://tarea-2.2024-2.tallerdeintegracion.cl/connect');
 
         websocket.onopen = () => {
             console.log('Connected to WebSocket server');
@@ -53,14 +53,44 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         websocket.onmessage = (event) => {
             const data = JSON.parse(event.data);
             switch (data.type) {
-            case 'flight':
+            case 'flights':
                 // Update flights state
-                setFlights((prevFlights) => [...prevFlights, data]);
+                setFlights((prevFlights) => {
+                    // Create a map for existing flights for easier lookup
+                    const updatedFlights = [...prevFlights];
+
+                    // Iterate over the incoming flights
+                    Object.entries(data.flights).forEach(([flight_id, flight]) => {
+                    // Find the index of the existing flight
+                        const index = updatedFlights.findIndex(f => f.id === flight_id);
+
+                        if (index !== -1) {
+                        // If flight exists, update it
+                            updatedFlights[index] = flight as Flight;
+                        } else {
+                        // If flight does not exist, add it
+                            updatedFlights.push(flight as Flight);
+                        }
+                    });
+
+                    return updatedFlights;
+                });
                 break;
 
             case 'plane':
                 // Update planes state
-                setPlanes((prevPlanes) => [...prevPlanes, data]);
+                setPlanes((prevPlanes) => {
+                    const existingPlaneIndex = prevPlanes.findIndex(plane => plane.flight_id === data.plane.flight_id);
+                    if (existingPlaneIndex !== -1) {
+                        // Update existing plane
+                        const updatedPlanes = [...prevPlanes];
+                        updatedPlanes[existingPlaneIndex] = data.plane;
+                        return updatedPlanes;
+                    } else {
+                        // Add new plane
+                        return [...prevPlanes, data.plane];
+                    }
+                });
                 break;
 
             case 'takeoff':
