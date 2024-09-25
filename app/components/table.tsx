@@ -3,19 +3,24 @@
 import React from "react";
 import { useWebSocket } from "../websocket";
 import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell} from "@nextui-org/react";
+import { format } from 'date-fns/format';
 
 export default function FlightTable() {
     const { flights } = useWebSocket();
     return (
-        <div className="max-h-[20%] col-span-3">
-            <Table aria-label="planes">
+        <div className="max-h-[18%] col-span-4">
+            <Table aria-label="planes"
+                classNames={{
+                    'base': 'overflow-y-auto',
+                }}
+            >
                 <TableHeader>
-                    <TableColumn>flight_id</TableColumn>
-                    <TableColumn>departure</TableColumn>
-                    <TableColumn>departure city</TableColumn>
-                    <TableColumn>destination</TableColumn>
-                    <TableColumn>destination city</TableColumn>
-                    <TableColumn>departure_date</TableColumn>
+                    <TableColumn>ID</TableColumn>
+                    <TableColumn>Salida</TableColumn>
+                    <TableColumn>Ciudad de Salida</TableColumn>
+                    <TableColumn>Destino</TableColumn>
+                    <TableColumn>Ciudad de destino</TableColumn>
+                    <TableColumn>Fecha y hora</TableColumn>
                 </TableHeader>
                 <TableBody items={flights}>
                     {(item) => (
@@ -25,7 +30,7 @@ export default function FlightTable() {
                             <TableCell>{item.departure.city.name}</TableCell>
                             <TableCell>{item.destination.name}</TableCell>
                             <TableCell>{item.destination.city.name}</TableCell>
-                            <TableCell>{item.departure_date.toLocaleString('en-US')}</TableCell>
+                            <TableCell>{format(item.departure_date, "yyyy-MM-dd hh:mm")}</TableCell>
                         </TableRow>
                     )}
                 </TableBody>
