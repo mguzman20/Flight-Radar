@@ -14,8 +14,7 @@ export default function RootLayout({
             <body >
                 <NextUIProvider>
                     <WebSocketProvider>
-                        <div style={{ height: '100svh' }} className="flex flex-col items-stretch min-h-screen">
-                            <Navbar />
+                        <div>
                             {children}
                         </div>
                     </WebSocketProvider>

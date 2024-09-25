@@ -7,7 +7,7 @@ import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell} 
 export default function FlightTable() {
     const { flights } = useWebSocket();
     return (
-        <div className="max-h-[20%]">
+        <div className="max-h-[20%] col-span-3">
             <Table aria-label="planes">
                 <TableHeader>
                     <TableColumn>flight_id</TableColumn>

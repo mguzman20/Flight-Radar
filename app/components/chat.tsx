@@ -6,7 +6,7 @@ import { useWebSocket } from "../websocket";
 export default function Chat() {
     const { messages } = useWebSocket();
     return (
-        <div className="border rounded w-full">
+        <div className="border rounded col-span-1">
             <div className="p-2 bg-gray-200">Chat</div>
             <div className="flex-col">
                 {messages.map((message, index) => (
