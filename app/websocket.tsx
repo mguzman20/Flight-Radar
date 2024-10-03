@@ -4,7 +4,7 @@ import { Flight } from '@/types/Flight';
 import { Plane, TakeoffEvent, LandingEvent, CrashedEvent } from '@/types/Plane';
 import { Message } from '@/types/Message';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { ReactNode } from 'react';
+import { ReactNode, useRef } from 'react';
 
 interface WebSocketContextType {
     flights: Flight[];
@@ -13,6 +13,7 @@ interface WebSocketContextType {
     takeoffs: string[];
     crashes: string[];
     messages: Message[];
+    sendEvent: (event: any) => void;
 }
 
 const defaultContextValue: WebSocketContextType = {
@@ -21,7 +22,10 @@ const defaultContextValue: WebSocketContextType = {
     landings: [],
     takeoffs: [],
     crashes: [],
-    messages: []
+    messages: [],
+    sendEvent: () => {
+        console.warn('WebSocket context is not initialized');
+    },
 };
 
 const WebSocketContext = createContext<WebSocketContextType>(defaultContextValue);
@@ -34,11 +38,13 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const [landings, setLandings] = useState<string[]>([]);
     const [crashes, setCrashes] = useState<string[]>([]);
     
+    const websocketRef = useRef<WebSocket | null>(null);
     const studentId = '20642431'; // Replace with your student ID
     const username = 'm.gguzman'; // Optional
 
     useEffect(() => {
         const websocket = new WebSocket('wss://tarea-2.2024-2.tallerdeintegracion.cl/connect');
+        websocketRef.current = websocket
 
         websocket.onopen = () => {
             console.log('Connected to WebSocket server');
@@ -131,8 +137,17 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         };
     }, []);
 
+    // Function to send events to the WebSocket server
+    const sendEvent = (event: any) => {
+        if (websocketRef.current && websocketRef.current.readyState === WebSocket.OPEN) {
+            websocketRef.current.send(JSON.stringify(event));
+        } else {
+            console.error('WebSocket connection is not open');
+        }
+    };
+
     return (
-        <WebSocketContext.Provider value={{ flights, planes, landings, takeoffs, crashes, messages }}>
+        <WebSocketContext.Provider value={{ flights, planes, landings, takeoffs, crashes, messages, sendEvent }}>
             {children}
         </WebSocketContext.Provider>
     );
