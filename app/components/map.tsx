@@ -12,6 +12,12 @@ const planeIcon = L.icon({
     iconAnchor: [20, 20],
 });
 
+const airportIcon = L.icon({
+    iconUrl: 'airport.png',
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
+});
+
 function FitWorldView() {
     const map = useMap();
     
@@ -51,7 +57,7 @@ export default function Map() {
                                 </div>
                             </Popup>
                         </Marker>
-                        <Marker key={index} position={[flight.departure.location.lat, flight.departure.location.long]}  >
+                        <Marker key={index} position={[flight.departure.location.lat, flight.departure.location.long]} icon={airportIcon} >
                             <Popup>
                                 <div className="flex flex-col">
                                     <span className="text-black font-bold">{flight.departure.name}</span>
@@ -59,7 +65,7 @@ export default function Map() {
                                 </div>
                             </Popup>
                         </Marker>
-                        <Marker key={index} position={[flight.destination.location.lat, flight.destination.location.long]}>
+                        <Marker key={index} position={[flight.destination.location.lat, flight.destination.location.long]} icon={airportIcon}>
                             <Popup>
                                 <div className="flex flex-col">
                                     <span className="text-black font-bold">{flight.destination.name}</span>
