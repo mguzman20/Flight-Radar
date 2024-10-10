@@ -15,6 +15,24 @@ function createRotatedPlaneIcon(heading: number) {
     });
 }
 
+const takeOffIcon = L.icon({
+    iconUrl: 'take-off.png',
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
+});
+
+const landingIcon = L.icon({
+    iconUrl: 'landing.png',
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
+});
+
+const crashIcon = L.icon({
+    iconUrl: 'crashed.png',
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
+});
+
 const departureIcon = L.icon({
     iconUrl: 'departure.png',
     iconSize: [40, 40],
@@ -31,7 +49,7 @@ function FitWorldView() {
     const map = useMap();
     
     useEffect(() => {
-        map.setView([20, 0], 1); // Automatically adjusts the map to fit the whole world
+        map.setView([20, 0], 1.5); // Automatically adjusts the map to fit the whole world
     }, [map]);
 
     return null;
@@ -78,7 +96,13 @@ export default function Map() {
                 const heading = getHeading(plane.position.lat, plane.position.long, flight.destination.location.lat, flight.destination.location.long);
                 return (
                     <>  
-                        <Marker key={index} position={[plane.position.lat, plane.position.long]} icon={createRotatedPlaneIcon(heading)}>
+                        <Marker key={index} position={[plane.position.lat, plane.position.long]} 
+                            icon={
+                                plane.status === 'take-off' ? takeOffIcon :
+                                    plane.status === 'arrived' ? landingIcon :
+                                        plane.status === 'crashed' ? crashIcon :
+                                            createRotatedPlaneIcon(heading)
+                            }>
                             <Popup >
                                 <div className="flex flex-col">
                                     <span className="text-black font-bold">{plane.flight_id}</span>

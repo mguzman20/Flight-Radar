@@ -61,26 +61,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
             switch (data.type) {
             case 'flights':
                 // Update flights state
-                setFlights((prevFlights) => {
-                    // Create a map for existing flights for easier lookup
-                    const updatedFlights = [...prevFlights];
-
-                    // Iterate over the incoming flights
-                    Object.entries(data.flights).forEach(([flight_id, flight]) => {
-                    // Find the index of the existing flight
-                        const index = updatedFlights.findIndex(f => f.id === flight_id);
-
-                        if (index !== -1) {
-                        // If flight exists, update it
-                            updatedFlights[index] = flight as Flight;
-                        } else {
-                        // If flight does not exist, add it
-                            updatedFlights.push(flight as Flight);
-                        }
-                    });
-
-                    return updatedFlights;
-                });
+                setFlights(Object.values(data.flights) as Flight[]);
                 break;
 
             case 'plane':
@@ -99,19 +80,29 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
                 });
                 break;
 
-            case 'takeoff':
+            case 'take-off':
                 // Update takeoffs state
                 setTakeoffs((prevTakeoffs) => [...prevTakeoffs, data.flight_id]);
                 break;
 
             case 'landing':
                 // Handle landing events if needed
+                console.log('Landing event:', data);
                 setLandings((prevLandings) => [...prevLandings, data.flight_id]);
+                setFlights((prevFlights) =>
+                    prevFlights.filter(flight => flight.id !== data.flight_id)
+                );
                 break;
 
-            case 'crash':
+            case 'crashed':
                 // Handle crash events if needed
                 setCrashes((prevCrashes) => [...prevCrashes, data.flight_id]);
+
+                setTimeout(() => {
+                    setFlights((prevFlights) =>
+                        prevFlights.filter(flight => flight.id !== data.flight_id)
+                    );
+                }, 30000); // 30,000 milliseconds = 30 seconds
                 break;
 
             case 'message':

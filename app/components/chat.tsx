@@ -10,7 +10,7 @@ export default function Chat() {
     return (
         <div className="border rounded col-span-1 max-h-[40%]">
             <div className="p-2 bg-gray-200">Chat</div>
-            <div className="flex-col overflow-y-auto ">
+            <div className="flex-col overflow-y-auto h-[50vh]">
                 {messages.map((message, index) => (
                     <div key={index} className={`rounded-lg m-1 p-1 ${message.level === 'info' ? 'bg-blue-300' : 'bg-orange-300'}`}>
                         <div className="flex flex-col">

@@ -8,11 +8,12 @@ import { format } from 'date-fns/format';
 export default function FlightTable() {
     const { flights } = useWebSocket();
     return (
-        <div className="max-h-[18%] col-span-4">
+        <div className="col-span-4">
             <Table aria-label="planes"
                 classNames={{
                     'base': 'overflow-y-auto',
                 }}
+                removeWrapper={true}
             >
                 <TableHeader>
                     <TableColumn>ID</TableColumn>
